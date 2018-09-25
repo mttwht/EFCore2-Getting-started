@@ -12,7 +12,20 @@ namespace SamuraiApp.UI
     {
         static void Main( string[] args )
         {
-            InsertSamurai();
+            //InsertSamurai();
+            InsertMultipleSamurais();
+        }
+
+        private static void InsertMultipleSamurais()
+        {
+            var samuraiMatt = new Samurai() { Name = "Matt" };
+            var samuraiFreyja = new Samurai() { Name = "Freyja" };
+            using(var context = new SamuraiContext()) {
+                //context.Samurais.Add(samuraiMatt);
+                //context.Samurais.Add(samuraiFreyja);
+                context.Samurais.AddRange(samuraiMatt, samuraiFreyja);
+                context.SaveChanges();
+            }
         }
 
         private static void InsertSamurai()
