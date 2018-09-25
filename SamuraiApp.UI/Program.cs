@@ -22,7 +22,11 @@ namespace SamuraiApp.UI
             //RetrieveAndUpdateSamurai();
             //RetrieveAndUpdateMultipleSamurais();
             //InsertBattle();
-            QueryAndUpdateBattle_Disconnected();
+            //QueryAndUpdateBattle_Disconnected();
+            //DeleteWhileTracked();
+            //DeleteMany();
+            //DeleteWhileNotTracked();
+            DeleteById(3);
         }
 
         private static void InsertMultipleSamurais()
@@ -100,6 +104,43 @@ namespace SamuraiApp.UI
                 newContextInstance.Battles.Update(battle);
                 newContextInstance.SaveChanges();
             }
+        }
+
+        private static void DeleteWhileTracked() {
+            var samurai = _context.Samurais.FirstOrDefault(s => s.Name == "Matt");
+            _context.Samurais.Remove(samurai);
+            // Alternatives:
+            //_context.Remove(samurai);
+            //_context.Samurais.Remove(_context.Samurais.Find(1));
+            _context.SaveChanges();
+        }
+
+        private static void DeleteMany()
+        {
+            var samurais = _context.Samurais.Where(s => s.Name == "Matt");
+            _context.Samurais.RemoveRange(samurais);
+            // Alternative:
+            //_context.RemoveRange(samurais);
+            _context.SaveChanges();
+        }
+
+        private static void DeleteWhileNotTracked() {
+            var samurai = _context.Samurais.FirstOrDefault(s => s.Name == "Matt");
+            using(var newContextInstance = new SamuraiContext()) {
+                newContextInstance.Samurais.Remove(samurai);
+                // Alternative:
+                //newContextInstance.Entry(samurai).State = EntityState.Deleted;
+                newContextInstance.SaveChanges();
+            }
+        }
+
+        private static void DeleteById(int samuraiId) {
+            var samurai = _context.Samurais.Find(samuraiId);
+            _context.Remove(samurai);
+            _context.SaveChanges();
+            // Alternative to fetching before deleting
+            //_context.Database.ExecuteSqlCommand("DELETE FROM Samurais WHERE Id={0}", samuraiId);
+            // OR call a sproc
         }
 
     }
