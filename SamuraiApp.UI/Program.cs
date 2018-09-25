@@ -5,44 +5,63 @@ using System.Text;
 using System.Threading.Tasks;
 using SamuraiApp.Domain;
 using SamuraiApp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace SamuraiApp.UI
 {
     class Program
     {
+        private static SamuraiContext _context = new SamuraiContext();
+
         static void Main( string[] args )
         {
             //InsertSamurai();
             //InsertMultipleSamurais();
-            SimpleSamuraiQuery();
+            //SimpleSamuraiQuery();
+            MoreQueries();
         }
 
         private static void InsertMultipleSamurais()
         {
             var samuraiMatt = new Samurai() { Name = "Matt" };
             var samuraiFreyja = new Samurai() { Name = "Freyja" };
-            using(var context = new SamuraiContext()) {
-                //context.Samurais.Add(samuraiMatt);
-                //context.Samurais.Add(samuraiFreyja);
-                context.Samurais.AddRange(samuraiMatt, samuraiFreyja);
-                context.SaveChanges();
-            }
+            //_context.Samurais.Add(samuraiMatt);
+            //_context.Samurais.Add(samuraiFreyja);
+            _context.Samurais.AddRange(samuraiMatt, samuraiFreyja);
+            _context.SaveChanges();
         }
 
         private static void InsertSamurai()
         {
             var samurai = new Samurai() { Name = "Matt" };
-            using(var context = new SamuraiContext()) {
-                context.Samurais.Add(samurai);
-                context.SaveChanges();
-            }
+            _context.Samurais.Add(samurai);
+            _context.SaveChanges();
         }
 
         private static void SimpleSamuraiQuery()
         {
-            using(var context = new SamuraiContext()) {
-                var samurais = context.Samurais.ToList();
-            }
+            var samurais = _context.Samurais.ToList();
+        }
+
+        private static void MoreQueries()
+        {
+            // Does not parameterise
+            //var samurais = _context.Samurais.Where(s => s.Name == "Matt").ToList();
+
+            // Parameretise variables
+            //var name = "Matt";
+            //var samurais = _context.Samurais.Where(s => s.Name == name).ToList();
+
+            // Get first result by name, or null on default
+            //var samurai = _context.Samurais.FirstOrDefault(s => s.Name == name);
+
+            // Get by ID
+            //var samurai = _context.Samurais.Find(2);
+
+            // Get using LIKE
+            //var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, "M%")).ToList();
+            // same as
+            var samurais = _context.Samurais.Where(s => s.Name.Contains("M")).ToList();
         }
 
     }
