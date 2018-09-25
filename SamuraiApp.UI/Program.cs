@@ -18,7 +18,9 @@ namespace SamuraiApp.UI
             //InsertSamurai();
             //InsertMultipleSamurais();
             //SimpleSamuraiQuery();
-            MoreQueries();
+            //MoreQueries();
+            //RetrieveAndUpdateSamurai();
+            RetrieveAndUpdateMultipleSamurais();
         }
 
         private static void InsertMultipleSamurais()
@@ -62,6 +64,22 @@ namespace SamuraiApp.UI
             //var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, "M%")).ToList();
             // same as
             var samurais = _context.Samurais.Where(s => s.Name.Contains("M")).ToList();
+        }
+
+        private static void RetrieveAndUpdateSamurai()
+        {
+            var samurai = _context.Samurais.FirstOrDefault();
+            if(!samurai.Name.Contains("San")) {
+                samurai.Name += " San";
+                _context.SaveChanges();
+            }
+        }
+
+        private static void RetrieveAndUpdateMultipleSamurais()
+        {
+            var samurais = _context.Samurais.Where(s => !s.Name.Contains("San")).ToList();
+            samurais.ForEach(s => s.Name += " San");
+            _context.SaveChanges();
         }
 
     }
