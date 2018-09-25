@@ -21,7 +21,8 @@ namespace SamuraiApp.Data
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
         {
             optionsBuilder
-                .UseLoggerFactory(MyConsoleLoggerFactory)
+                .UseLoggerFactory(MyConsoleLoggerFactory) // log sql queries
+                .EnableSensitiveDataLogging(true) // show parameters in log
                 .UseSqlServer("Server=(localdb)\\mssqllocaldb; Database=SamuraiAppData; Trusted_Connection=True;");
         }
 
