@@ -13,7 +13,8 @@ namespace SamuraiApp.UI
         static void Main( string[] args )
         {
             //InsertSamurai();
-            InsertMultipleSamurais();
+            //InsertMultipleSamurais();
+            SimpleSamuraiQuery();
         }
 
         private static void InsertMultipleSamurais()
@@ -36,5 +37,13 @@ namespace SamuraiApp.UI
                 context.SaveChanges();
             }
         }
+
+        private static void SimpleSamuraiQuery()
+        {
+            using(var context = new SamuraiContext()) {
+                var samurais = context.Samurais.ToList();
+            }
+        }
+
     }
 }
