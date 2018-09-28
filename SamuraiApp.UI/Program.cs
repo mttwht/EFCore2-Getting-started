@@ -31,7 +31,51 @@ namespace SamuraiApp.UI
             //InsertNewPkFkGraphMultipleChildren();
             //AddChildToExistingObjectWhileTracked();
             //AddChildToExistingObjectWhileNotTracked(5);
-            EagerLoadSamuraiWithQuotes();
+            //EagerLoadSamuraiWithQuotes();
+            //ProjectSomeProperties();
+            ProjectSamuraiWithQuotes();
+        }
+
+        private static void ProjectSamuraiWithQuotes()
+        {
+            //var somePropertiesWithQuotes = _context.Samurais.Select(s => new { s.Id, s.Name, s.Quotes }).ToList();
+
+            //var somePropertiesWithQuoteCount = _context.Samurais.Select(s => new { s.Id, s.Name, s.Quotes.Count }).ToList();
+
+            //var somePropertiesWithSomeQuotes = _context.Samurais
+            //        .Select(s => new {
+            //            s.Id, s.Name,
+            //            HappyQuotes =s.Quotes.Where(q=>q.Text.Contains("happy"))
+            //        }).ToList();
+
+            // This currently has a bug where HappyQuotes are returned but Samurai object is unaware of their quotes
+            //var samuraisWithSomeQuotes = _context.Samurais
+            //        .Select(s => new {
+            //            Samurai = s,
+            //            HappyQuotes = s.Quotes.Where(q => q.Text.Contains("happy"))
+            //        }).ToList();
+
+            // This does make Samurais aware of their own happy quotes
+            var samurais = _context.Samurais.ToList();
+            var happyQuotes = _context.Quotes.Where(q => q.Text.Contains("happy")).ToList();
+        }
+
+        public struct IdAndName
+        {
+            public IdAndName(int id, string name)
+            {
+                Id = id;
+                Name = name;
+            }
+            public int Id;
+            public string Name;
+        }
+
+        private static void ProjectSomeProperties()
+        {
+            var someProperties = _context.Samurais.Select(s => new { s.Id, s.Name }).ToList();
+            var idsAndNames = _context.Samurais.Select(s => new IdAndName(s.Id, s.Name)).ToList();
+            //return someProperties.ToList<dynamic>(); // Allows objects to exist outside of this method
         }
 
         private static void EagerLoadSamuraiWithQuotes()
