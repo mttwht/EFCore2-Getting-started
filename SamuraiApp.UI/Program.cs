@@ -34,7 +34,27 @@ namespace SamuraiApp.UI
             //EagerLoadSamuraiWithQuotes();
             //ProjectSomeProperties();
             //ProjectSamuraiWithQuotes();
-            FilterByRelatedData();
+            //FilterByRelatedData();
+            //ModifyRelatedDataWhileTracked();
+            ModifyRelatedDataWhileNotTracked();
+        }
+
+        private static void ModifyRelatedDataWhileNotTracked()
+        {
+            var samurai = _context.Samurais.Include(s => s.Quotes).FirstOrDefault();
+            var quote = samurai.Quotes[0];
+            quote.Text += " Did you hear that?";
+            using(var newContext = new SamuraiContext()) {
+                newContext.Quotes.Update(quote);
+                newContext.SaveChanges();
+            }
+        }
+
+        private static void ModifyRelatedDataWhileTracked()
+        {
+            var samurai = _context.Samurais.Include(s => s.Quotes).FirstOrDefault();
+            samurai.Quotes[0].Text += " Did you hear that?";
+            _context.SaveChanges();
         }
 
         private static void FilterByRelatedData()
