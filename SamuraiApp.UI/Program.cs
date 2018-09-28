@@ -30,7 +30,18 @@ namespace SamuraiApp.UI
             //InsertNewPkFkGraph();
             //InsertNewPkFkGraphMultipleChildren();
             //AddChildToExistingObjectWhileTracked();
-            AddChildToExistingObjectWhileNotTracked(5);
+            //AddChildToExistingObjectWhileNotTracked(5);
+            EagerLoadSamuraiWithQuotes();
+        }
+
+        private static void EagerLoadSamuraiWithQuotes()
+        {
+            var samuraiWithQuotes = _context.Samurais
+                    .Include(s => s.Quotes)
+                    //.Include(s => s.SecretIdentity) // eager load another child
+                    //.ThenInclude(q => q.Translations) // retrieve grandchildren also
+                    //.Include(s => s.Quotes.Translations) // retrieve ONLY grandchildren
+                    .ToList();
         }
 
         private static void AddChildToExistingObjectWhileNotTracked(int samuraiId)
