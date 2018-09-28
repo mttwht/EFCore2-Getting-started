@@ -33,7 +33,15 @@ namespace SamuraiApp.UI
             //AddChildToExistingObjectWhileNotTracked(5);
             //EagerLoadSamuraiWithQuotes();
             //ProjectSomeProperties();
-            ProjectSamuraiWithQuotes();
+            //ProjectSamuraiWithQuotes();
+            FilterByRelatedData();
+        }
+
+        private static void FilterByRelatedData()
+        {
+            var samurais = _context.Samurais
+                    .Where(s => s.Quotes.Any(q => q.Text.Contains("happy")))
+                    .ToList();
         }
 
         private static void ProjectSamuraiWithQuotes()
