@@ -26,7 +26,60 @@ namespace SamuraiApp.UI
             //DeleteWhileTracked();
             //DeleteMany();
             //DeleteWhileNotTracked();
-            DeleteById(3);
+            //DeleteById(3);
+            //InsertNewPkFkGraph();
+            //InsertNewPkFkGraphMultipleChildren();
+            //AddChildToExistingObjectWhileTracked();
+            AddChildToExistingObjectWhileNotTracked(5);
+        }
+
+        private static void AddChildToExistingObjectWhileNotTracked(int samuraiId)
+        {
+            // Easiest way to create children offline is by manually setting FK
+            var quote = new Quote {
+                Text = "Now that I've saved you, will you feed me dinner?",
+                SamuraiId = samuraiId
+            };
+            using( var newContext = new SamuraiContext() ) {
+                newContext.Quotes.Add(quote);
+                newContext.SaveChanges();
+            }
+        }
+
+        private static void AddChildToExistingObjectWhileTracked()
+        {
+            var samurai = _context.Samurais.First();
+            samurai.Quotes.Add(new Quote {
+                Text = "I bet you're happy that I've saved you!"
+            });
+            _context.SaveChanges();
+        }
+
+        private static void InsertNewPkFkGraphMultipleChildren()
+        {
+            // Three INSERTs are generated (supposed to be two?)
+            var samurai = new Samurai {
+                Name = "Kyuzo",
+                Quotes = new List<Quote> {
+                    new Quote {Text = "Watch out for my sharp sword!"},
+                    new Quote {Text = "I told you to watch out for the sharp sword! Oh well."},
+                },
+            };
+            _context.Samurais.Add(samurai);
+            _context.SaveChanges();
+        }
+
+        private static void InsertNewPkFkGraph()
+        {
+            // Two INSERTs are generated
+            var samurai = new Samurai {
+                Name = "Kambei Shimada",
+                Quotes = new List<Quote> {
+                    new Quote {Text = "I've come to save you."}
+                }
+            };
+            _context.Samurais.Add(samurai);
+            _context.SaveChanges();
         }
 
         private static void InsertMultipleSamurais()
