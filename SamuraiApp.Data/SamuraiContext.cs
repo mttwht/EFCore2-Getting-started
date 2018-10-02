@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using SamuraiApp.Domain;
 using System;
+using System.Linq;
 
 namespace SamuraiApp.Data
 {
@@ -34,8 +35,13 @@ namespace SamuraiApp.Data
             modelBuilder.Entity<Battle>().Property(b => b.StartDate).HasColumnType("Date");
             modelBuilder.Entity<Battle>().Property(b => b.EndDate).HasColumnType("Date");
 
-            modelBuilder.Entity<Samurai>().Property<DateTime>("CreatedAt");
-            modelBuilder.Entity<Samurai>().Property<DateTime>("UpdatedAt");
+            //modelBuilder.Entity<Samurai>().Property<DateTime>("CreatedAt");
+            //modelBuilder.Entity<Samurai>().Property<DateTime>("UpdatedAt");
+
+            foreach(var entityType in modelBuilder.Model.GetEntityTypes()) {
+                modelBuilder.Entity(entityType.Name).Property<DateTime>("CreatedAt");
+                modelBuilder.Entity(entityType.Name).Property<DateTime>("UpdatedAt");
+            }
 
             //// mapping shadow property; mullable foreign key
             //modelBuilder.Entity<Samurai>()
@@ -45,5 +51,17 @@ namespace SamuraiApp.Data
             //            .HasForeignKey<SecretIdentity>("SamuraiId");
         }
 
+        public override int SaveChanges()
+        {
+            ChangeTracker.DetectChanges();
+            var timestamp = DateTime.Now;
+            foreach(var entry in ChangeTracker.Entries()
+                    .Where(e=>e.State==EntityState.Added || e.State==EntityState.Modified ) ) {
+                entry.Property("UpdatedAt").CurrentValue = timestamp;
+                if(entry.State == EntityState.Added)
+                    entry.Property("CreatedAt").CurrentValue = timestamp;
+            }
+            return base.SaveChanges();
+        }
     }
 }
