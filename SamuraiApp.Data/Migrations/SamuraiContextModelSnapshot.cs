@@ -120,7 +120,7 @@ namespace SamuraiApp.Data.Migrations
 
             modelBuilder.Entity("SamuraiApp.Domain.SecretIdentity", b =>
                 {
-                    b.HasOne("SamuraiApp.Domain.Samurai", "Samurai")
+                    b.HasOne("SamuraiApp.Domain.Samurai")
                         .WithOne("SecretIdentity")
                         .HasForeignKey("SamuraiApp.Domain.SecretIdentity", "SamuraiId")
                         .OnDelete(DeleteBehavior.Cascade);

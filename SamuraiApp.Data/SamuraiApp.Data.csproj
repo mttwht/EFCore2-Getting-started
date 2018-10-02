@@ -136,10 +136,6 @@
     <Compile Include="Migrations\20181002120115_Initial.designer.cs">
       <DependentUpon>20181002120115_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20181002155327_navigation.cs" />
-    <Compile Include="Migrations\20181002155327_navigation.designer.cs">
-      <DependentUpon>20181002155327_navigation.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\SamuraiContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SamuraiContext.cs" />
