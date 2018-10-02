@@ -40,7 +40,20 @@ namespace SamuraiApp.UI
             //EditSecretIdentity();
             //ReplaceSecretIdentity();
             //ReplaceSecretIdentityNotTracked();
-            ReplaceSecretIdentityNotInMemory();
+            //ReplaceSecretIdentityNotInMemory();
+
+            // Shadow properties
+            CreateSamurai();
+        }
+
+        private static void CreateSamurai()
+        {
+            var samurai = new Samurai { Name = "Ronin" };
+            _context.Samurais.Add(samurai);
+            var timestamp = DateTime.Now;
+            _context.Entry(samurai).Property("CreatedAt").CurrentValue = timestamp;
+            _context.Entry(samurai).Property("UpdatedAt").CurrentValue = timestamp;
+            _context.SaveChanges();
         }
 
         private static void ReplaceSecretIdentityNotInMemory()
@@ -50,7 +63,6 @@ namespace SamuraiApp.UI
             samurai.SecretIdentity = new SecretIdentity { RealName = "Matt" };
             _context.SaveChanges();
         }
-
         private static void ReplaceSecretIdentityNotTracked()
         {
             Samurai samurai;
