@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using SamuraiApp.Domain;
+using System;
 
 namespace SamuraiApp.Data
 {
@@ -29,8 +30,12 @@ namespace SamuraiApp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SamuraiBattle>().HasKey(s => new { s.SamuraiId, s.BattleId });
+
             modelBuilder.Entity<Battle>().Property(b => b.StartDate).HasColumnType("Date");
             modelBuilder.Entity<Battle>().Property(b => b.EndDate).HasColumnType("Date");
+
+            modelBuilder.Entity<Samurai>().Property<DateTime>("CreatedAt");
+            modelBuilder.Entity<Samurai>().Property<DateTime>("UpdatedAt");
 
             //// mapping shadow property; mullable foreign key
             //modelBuilder.Entity<Samurai>()
