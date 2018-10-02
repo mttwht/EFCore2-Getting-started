@@ -16,11 +16,66 @@ namespace SamuraiApp.UI
         static void Main( string[] args )
         {
             //PrePopulateSamuraisAndBattles();
+
+            // Many-to-many
+            // Create
             //JoinSamuraiAndBattle();
             //EnlistSamuraiInBattle();
             //EnlistSamuraiInBattleUntracked();
             //AddNewSamuraiViaDisconnectedBattleObject();
-            GetSamuraiWithBattles();
+            // Query
+            //GetSamuraiWithBattles();
+            // Modify
+            //RemoveJoinBetweenSamuraiAndBattleSimple();
+            //RemoveBattleFromSamurai();
+            RemoveBattleFromSamuraiDisconnected();
+        }
+
+        private static void RemoveBattleFromSamuraiDisconnected()
+        {
+            // Goal is to remove join between Shichiroji(3) and Okehazama(1)
+            Samurai samurai;
+            using(var newContext = new SamuraiContext()) {
+                samurai = newContext.Samurais.Include(s => s.SamuraiBattles)
+                                             .ThenInclude(sb => sb.Battle)
+                                             .SingleOrDefault(s => s.Id == 3);
+            }
+            var sbToRemove = samurai.SamuraiBattles.SingleOrDefault(sb => sb.BattleId == 1);
+
+            // This doesn't work as the tracker won't be aware of the removed object
+            //samurai.SamuraiBattles.Remove(sbToRemove);
+            //_context.Attach(samurai);
+
+            // This should work...?
+            //_context.Attach(samurai);
+            //samurai.SamuraiBattles.Remove(sbToRemove);
+
+            // This makes the tracker aware of the change
+            samurai.SamuraiBattles.Remove(sbToRemove);
+            _context.Remove(sbToRemove);
+
+            _context.ChangeTracker.DetectChanges();
+            _context.SaveChanges();
+        }
+
+        private static void RemoveBattleFromSamurai()
+        {
+            // Goal is to remove join between Shichiroji(3) and Okehazama(1)
+            var samurai = _context.Samurais.Include(s => s.SamuraiBattles)
+                                           .ThenInclude(sb => sb.Battle)
+                                           .SingleOrDefault(s => s.Id == 3);
+            var sbToRemove = samurai.SamuraiBattles.SingleOrDefault(sb => sb.BattleId == 1);
+            samurai.SamuraiBattles.Remove(sbToRemove); // Remove via List<T>
+            //_context.Remove(sbToRemove); // Remove via DbContext
+            _context.ChangeTracker.DetectChanges(); // Only here for debugging
+            _context.SaveChanges();
+        }
+
+        private static void RemoveJoinBetweenSamuraiAndBattleSimple()
+        {
+            var join = new SamuraiBattle { BattleId = 1, SamuraiId = 8 };
+            _context.Remove(join);
+            _context.SaveChanges();
         }
 
         private static void GetSamuraiWithBattles()
