@@ -132,13 +132,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\20180730214838_initial.cs" />
-    <Compile Include="Migrations\20180730214838_initial.designer.cs">
-      <DependentUpon>20180730214838_initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20180925185332_relationships.cs" />
-    <Compile Include="Migrations\20180925185332_relationships.designer.cs">
-      <DependentUpon>20180925185332_relationships.cs</DependentUpon>
+    <Compile Include="Migrations\20181002120115_Initial.cs" />
+    <Compile Include="Migrations\20181002120115_Initial.designer.cs">
+      <DependentUpon>20181002120115_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\SamuraiContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

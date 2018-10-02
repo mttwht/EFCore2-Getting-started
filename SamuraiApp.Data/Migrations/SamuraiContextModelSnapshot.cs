@@ -76,9 +76,6 @@ namespace SamuraiApp.Data.Migrations
 
                     b.HasIndex("BattleId");
 
-                    b.HasIndex("SamuraiId")
-                        .IsUnique();
-
                     b.ToTable("SamuraiBattle");
                 });
 
@@ -116,8 +113,8 @@ namespace SamuraiApp.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SamuraiApp.Domain.Samurai", "Samurai")
-                        .WithOne("SamuraiBattles")
-                        .HasForeignKey("SamuraiApp.Domain.SamuraiBattle", "SamuraiId")
+                        .WithMany("SamuraiBattles")
+                        .HasForeignKey("SamuraiId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
