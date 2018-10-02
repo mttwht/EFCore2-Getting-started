@@ -17,5 +17,13 @@ namespace SamuraiApp.Domain
         public List<SamuraiBattle> SamuraiBattles { get; set; }
         public SecretIdentity SecretIdentity { get; set; }
 
+        public List<Battle> Battles()
+        {
+            var battles = new List<Battle>();
+            foreach(var sb in SamuraiBattles) {
+                battles.Add(sb.Battle);
+            }
+            return battles;
+        }
     }
 }

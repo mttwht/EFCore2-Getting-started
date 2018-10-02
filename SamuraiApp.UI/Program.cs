@@ -19,7 +19,25 @@ namespace SamuraiApp.UI
             //JoinSamuraiAndBattle();
             //EnlistSamuraiInBattle();
             //EnlistSamuraiInBattleUntracked();
-            AddNewSamuraiViaDisconnectedBattleObject();
+            //AddNewSamuraiViaDisconnectedBattleObject();
+            GetSamuraiWithBattles();
+        }
+
+        private static void GetSamuraiWithBattles()
+        {
+            var samurai = _context.Samurais
+                    .Include(s => s.SamuraiBattles)
+                    .ThenInclude(sb => sb.Battle)
+                    .FirstOrDefault(s => s.Id == 1);
+            // get a single battle
+            var battle = samurai.SamuraiBattles.First().Battle;
+            // get all battles
+            var allBattles = new List<Battle>();
+            foreach(var sb in samurai.SamuraiBattles) {
+                allBattles.Add(sb.Battle);
+            }
+            // good practice alternative:
+            //allBattles = samurai.Battles();
         }
 
         private static void AddNewSamuraiViaDisconnectedBattleObject()
