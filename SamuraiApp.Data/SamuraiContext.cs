@@ -29,6 +29,15 @@ namespace SamuraiApp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SamuraiBattle>().HasKey(s => new { s.SamuraiId, s.BattleId });
+            modelBuilder.Entity<Battle>().Property(b => b.StartDate).HasColumnType("Date");
+            modelBuilder.Entity<Battle>().Property(b => b.EndDate).HasColumnType("Date");
+
+            //// mapping shadow property; mullable foreign key
+            //modelBuilder.Entity<Samurai>()
+            //            .HasOne(s => s.SecretIdentity)
+            //            .WithOne(i => i.Samurai)
+            //            //.IsRequired() // SecretIdentity must always have a Samurai
+            //            .HasForeignKey<SecretIdentity>("SamuraiId");
         }
 
     }
