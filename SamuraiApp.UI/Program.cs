@@ -35,9 +35,48 @@ namespace SamuraiApp.UI
             //AddNewSamuraiWithSecretIdentity();
             //AddSecretIdentityUsingSamuraiId();
             //AddSecretIdentityToExistingSamurai();
-            AddSecretIdentityToExistingSamuraiDisconnected();
+            //AddSecretIdentityToExistingSamuraiDisconnected();
+            // Modify
+            //EditSecretIdentity();
+            //ReplaceSecretIdentity();
+            //ReplaceSecretIdentityNotTracked();
+            ReplaceSecretIdentityNotInMemory();
         }
 
+        private static void ReplaceSecretIdentityNotInMemory()
+        {
+            var samurai = _context.Samurais.FirstOrDefault(s => s.SecretIdentity != null);
+            // Old secret identity is not tracked so this fails
+            samurai.SecretIdentity = new SecretIdentity { RealName = "Matt" };
+            _context.SaveChanges();
+        }
+
+        private static void ReplaceSecretIdentityNotTracked()
+        {
+            Samurai samurai;
+            using(var newContext = new SamuraiContext()) {
+                samurai = newContext.Samurais.Include(s => s.SecretIdentity)
+                                             .FirstOrDefault(s => s.Id == 1);
+            }
+            samurai.SecretIdentity = new SecretIdentity { RealName = "Freyja" };
+            // This will not know to delete the old secret identity!!
+            _context.Samurais.Attach(samurai);
+            _context.SaveChanges();
+        }
+        private static void ReplaceSecretIdentity()
+        {
+            var samurai = _context.Samurais.Include(s => s.SecretIdentity)
+                                           .FirstOrDefault(s => s.Id == 1);
+            samurai.SecretIdentity = new SecretIdentity { RealName = "Matt" };
+            _context.SaveChanges();
+        }
+        private static void EditSecretIdentity()
+        {
+            var samurai = _context.Samurais.Include(s => s.SecretIdentity)
+                                           .FirstOrDefault(s => s.Id == 1);
+            samurai.SecretIdentity.RealName = "M-dawg";
+            _context.SaveChanges();
+        }
         private static void AddSecretIdentityToExistingSamuraiDisconnected()
         {
             Samurai samurai;
@@ -48,14 +87,12 @@ namespace SamuraiApp.UI
             _context.Samurais.Attach(samurai);
             _context.SaveChanges();
         }
-
         private static void AddSecretIdentityToExistingSamurai()
         {
             var samurai = _context.Samurais.Find(2);
             samurai.SecretIdentity = new SecretIdentity { RealName = "Matt" };
             _context.SaveChanges();
         }
-
         private static void AddSecretIdentityUsingSamuraiId()
         {
             // Only works once; when Samurai[1] does not yet have a SecretIdentity
@@ -63,7 +100,6 @@ namespace SamuraiApp.UI
             _context.Add(identity);
             _context.SaveChanges();
         }
-
         private static void AddNewSamuraiWithSecretIdentity()
         {
             var samurai = new Samurai { Name = "Jina Ujichika" };
@@ -98,7 +134,6 @@ namespace SamuraiApp.UI
             _context.ChangeTracker.DetectChanges();
             _context.SaveChanges();
         }
-
         private static void RemoveBattleFromSamurai()
         {
             // Goal is to remove join between Shichiroji(3) and Okehazama(1)
@@ -111,14 +146,12 @@ namespace SamuraiApp.UI
             _context.ChangeTracker.DetectChanges(); // Only here for debugging
             _context.SaveChanges();
         }
-
         private static void RemoveJoinBetweenSamuraiAndBattleSimple()
         {
             var join = new SamuraiBattle { BattleId = 1, SamuraiId = 8 };
             _context.Remove(join);
             _context.SaveChanges();
         }
-
         private static void GetSamuraiWithBattles()
         {
             var samurai = _context.Samurais
@@ -135,7 +168,6 @@ namespace SamuraiApp.UI
             // good practice alternative:
             //allBattles = samurai.Battles();
         }
-
         private static void AddNewSamuraiViaDisconnectedBattleObject()
         {
             Battle battle;
@@ -147,7 +179,6 @@ namespace SamuraiApp.UI
             _context.Battles.Attach(battle);
             _context.SaveChanges();
         }
-
         private static void EnlistSamuraiInBattleUntracked()
         {
             Battle battle;
@@ -159,14 +190,12 @@ namespace SamuraiApp.UI
             _context.ChangeTracker.DetectChanges(); // Not necessary; just to show debugging info
             _context.SaveChanges();
         }
-
         private static void EnlistSamuraiInBattle()
         {
             var battle = _context.Battles.Find(1);
             battle.SamuraiBattles.Add(new SamuraiBattle { SamuraiId = 3 });
             _context.SaveChanges();
         }
-
         private static void JoinSamuraiAndBattle()
         {
             var sb = new SamuraiBattle { SamuraiId = 1, BattleId = 3 };
