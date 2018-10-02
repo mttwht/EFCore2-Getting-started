@@ -28,7 +28,48 @@ namespace SamuraiApp.UI
             // Modify
             //RemoveJoinBetweenSamuraiAndBattleSimple();
             //RemoveBattleFromSamurai();
-            RemoveBattleFromSamuraiDisconnected();
+            //RemoveBattleFromSamuraiDisconnected();
+
+            // One-to-one
+            // Create
+            //AddNewSamuraiWithSecretIdentity();
+            //AddSecretIdentityUsingSamuraiId();
+            //AddSecretIdentityToExistingSamurai();
+            AddSecretIdentityToExistingSamuraiDisconnected();
+        }
+
+        private static void AddSecretIdentityToExistingSamuraiDisconnected()
+        {
+            Samurai samurai;
+            using(var newContext = new SamuraiContext()) {
+                samurai = _context.Samurais.Find(3);
+            }
+            samurai.SecretIdentity = new SecretIdentity { RealName = "Matthew" };
+            _context.Samurais.Attach(samurai);
+            _context.SaveChanges();
+        }
+
+        private static void AddSecretIdentityToExistingSamurai()
+        {
+            var samurai = _context.Samurais.Find(2);
+            samurai.SecretIdentity = new SecretIdentity { RealName = "Matt" };
+            _context.SaveChanges();
+        }
+
+        private static void AddSecretIdentityUsingSamuraiId()
+        {
+            // Only works once; when Samurai[1] does not yet have a SecretIdentity
+            var identity = new SecretIdentity { SamuraiId = 1 };
+            _context.Add(identity);
+            _context.SaveChanges();
+        }
+
+        private static void AddNewSamuraiWithSecretIdentity()
+        {
+            var samurai = new Samurai { Name = "Jina Ujichika" };
+            samurai.SecretIdentity = new SecretIdentity { RealName = "Julie" };
+            _context.Samurais.Add(samurai);
+            _context.SaveChanges();
         }
 
         private static void RemoveBattleFromSamuraiDisconnected()
@@ -46,7 +87,7 @@ namespace SamuraiApp.UI
             //samurai.SamuraiBattles.Remove(sbToRemove);
             //_context.Attach(samurai);
 
-            // This should work...?
+            // This does work because we start tracking before removing the item, so not really disconnected anymore
             //_context.Attach(samurai);
             //samurai.SamuraiBattles.Remove(sbToRemove);
 
