@@ -43,7 +43,20 @@ namespace SamuraiApp.UI
             //ReplaceSecretIdentityNotInMemory();
 
             // Shadow properties
-            CreateSamurai();
+            //CreateSamurai();
+            GetSamuraisCreatedInPastWeek();
+        }
+
+        private static void GetSamuraisCreatedInPastWeek()
+        {
+            var lastWeek = DateTime.Now.AddDays(-7);
+            //var samurais = _context.Samurais
+            //                       .Where(s => EF.Property<DateTime>(s, "CreatedAt") >= lastWeek)
+            //                       .ToList();
+            var samurais = _context.Samurais
+                                   .Where(s => EF.Property<DateTime>(s, "CreatedAt") >= lastWeek)
+                                   .Select(s => new { s.Id, s.Name, Created = EF.Property<DateTime>(s, "CreatedAt") })
+                                   .ToList();
         }
 
         private static void CreateSamurai()
