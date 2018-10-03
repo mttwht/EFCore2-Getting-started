@@ -44,7 +44,19 @@ namespace SamuraiApp.UI
 
             // Shadow properties
             //CreateSamurai();
-            GetSamuraisCreatedInPastWeek();
+            //GetSamuraisCreatedInPastWeek();
+            CreateAndEditSamuraiWithQuote();
+        }
+
+        private static void CreateAndEditSamuraiWithQuote()
+        {
+            var samurai = new Samurai { Name = "Yazu" };
+            var quote = new Quote { Text = "I will cut you up!" };
+            samurai.Quotes.Add(quote);
+            _context.Add(samurai);
+            _context.SaveChanges();
+            quote.Text += " And EAT YOU!";
+            _context.SaveChanges();
         }
 
         private static void GetSamuraisCreatedInPastWeek()
@@ -58,7 +70,6 @@ namespace SamuraiApp.UI
                                    .Select(s => new { s.Id, s.Name, Created = EF.Property<DateTime>(s, "CreatedAt") })
                                    .ToList();
         }
-
         private static void CreateSamurai()
         {
             var samurai = new Samurai { Name = "Ronin" };
