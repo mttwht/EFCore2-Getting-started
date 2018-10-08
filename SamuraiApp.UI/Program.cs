@@ -45,7 +45,34 @@ namespace SamuraiApp.UI
             // Shadow properties
             //CreateSamurai();
             //GetSamuraisCreatedInPastWeek();
-            CreateAndEditSamuraiWithQuote();
+            //CreateAndEditSamuraiWithQuote();
+
+            // Owned Types
+            //GetAllSamurais();
+            //CreateSamuraiWithBetterName();
+            RetrieveAndUpdateBetterName();
+        }
+
+        private static void RetrieveAndUpdateBetterName()
+        {
+            var samurai = _context.Samurais.FirstOrDefault(s => s.BetterName.Surname == "Black");
+            samurai.BetterName.GivenName = "Jill";
+            _context.SaveChanges();
+        }
+
+        private static void CreateSamuraiWithBetterName()
+        {
+            var samurai = new Samurai {
+                Name = "Jack le Black",
+                BetterName = new PersonName("Jack", "Black"),
+            };
+            _context.Samurais.Add(samurai);
+            _context.SaveChanges();
+        }
+
+        private static void GetAllSamurais()
+        {
+            var allSamurais = _context.Samurais.ToList();
         }
 
         private static void CreateAndEditSamuraiWithQuote()
@@ -58,7 +85,6 @@ namespace SamuraiApp.UI
             quote.Text += " And EAT YOU!";
             _context.SaveChanges();
         }
-
         private static void GetSamuraisCreatedInPastWeek()
         {
             var lastWeek = DateTime.Now.AddDays(-7);

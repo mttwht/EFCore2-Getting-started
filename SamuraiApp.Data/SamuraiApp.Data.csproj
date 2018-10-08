@@ -148,6 +148,14 @@
     <Compile Include="Migrations\20181002222111_AllTimestamps.designer.cs">
       <DependentUpon>20181002222111_AllTimestamps.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20181008100050_BetterName.cs" />
+    <Compile Include="Migrations\20181008100050_BetterName.designer.cs">
+      <DependentUpon>20181008100050_BetterName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20181008103832_RemoveTimestamps.cs" />
+    <Compile Include="Migrations\20181008103832_RemoveTimestamps.designer.cs">
+      <DependentUpon>20181008103832_RemoveTimestamps.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\SamuraiContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SamuraiContext.cs" />

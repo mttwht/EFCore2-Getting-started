@@ -38,11 +38,6 @@ namespace SamuraiApp.Data
             //modelBuilder.Entity<Samurai>().Property<DateTime>("CreatedAt");
             //modelBuilder.Entity<Samurai>().Property<DateTime>("UpdatedAt");
 
-            foreach(var entityType in modelBuilder.Model.GetEntityTypes()) {
-                modelBuilder.Entity(entityType.Name).Property<DateTime>("CreatedAt");
-                modelBuilder.Entity(entityType.Name).Property<DateTime>("UpdatedAt");
-            }
-
             //// mapping shadow property; mullable foreign key
             //modelBuilder.Entity<Samurai>()
             //            .HasOne(s => s.SecretIdentity)
@@ -54,6 +49,12 @@ namespace SamuraiApp.Data
             //modelBuilder.Entity<Samurai>().OwnsOne(s => s.BetterName).ToTable("SamuraiNames"); // Sends new columns to a separate table
             modelBuilder.Entity<Samurai>().OwnsOne(s => s.BetterName).Property(n => n.GivenName).HasColumnName("GivenName");
             modelBuilder.Entity<Samurai>().OwnsOne(s => s.BetterName).Property(n => n.Surname).HasColumnName("Surname");
+
+            foreach(var entityType in modelBuilder.Model.GetEntityTypes().Where(e=>!e.IsOwned())) {
+                modelBuilder.Entity(entityType.Name).Property<DateTime>("CreatedAt");
+                modelBuilder.Entity(entityType.Name).Property<DateTime>("UpdatedAt");
+            }
+
         }
 
         public override int SaveChanges()
@@ -61,7 +62,7 @@ namespace SamuraiApp.Data
             ChangeTracker.DetectChanges();
             var timestamp = DateTime.Now;
             foreach(var entry in ChangeTracker.Entries()
-                    .Where(e=>e.State==EntityState.Added || e.State==EntityState.Modified ) ) {
+                    .Where(e=>(e.State==EntityState.Added || e.State==EntityState.Modified) && !e.Metadata.IsOwned()) ) {
                 entry.Property("UpdatedAt").CurrentValue = timestamp;
                 if(entry.State == EntityState.Added)
                     entry.Property("CreatedAt").CurrentValue = timestamp;
