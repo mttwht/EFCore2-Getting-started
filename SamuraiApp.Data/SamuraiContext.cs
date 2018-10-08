@@ -49,6 +49,11 @@ namespace SamuraiApp.Data
             //            .WithOne(i => i.Samurai)
             //            //.IsRequired() // SecretIdentity must always have a Samurai
             //            .HasForeignKey<SecretIdentity>("SamuraiId");
+
+            //modelBuilder.Entity<Samurai>().OwnsOne(s => s.BetterName);
+            //modelBuilder.Entity<Samurai>().OwnsOne(s => s.BetterName).ToTable("SamuraiNames"); // Sends new columns to a separate table
+            modelBuilder.Entity<Samurai>().OwnsOne(s => s.BetterName).Property(n => n.GivenName).HasColumnName("GivenName");
+            modelBuilder.Entity<Samurai>().OwnsOne(s => s.BetterName).Property(n => n.Surname).HasColumnName("Surname");
         }
 
         public override int SaveChanges()
