@@ -49,11 +49,54 @@ namespace SamuraiApp.UI
 
             // Owned Types
             //GetAllSamurais();
-            CreateSamuraiWithBetterName();
+            //CreateSamuraiWithBetterName();
             //RetrieveAndUpdateBetterName();
             //FixNullBetterName();
-            CreateAndFixNullBetterName();
-            ReplaceBetterName();
+            //CreateAndFixNullBetterName();
+            //ReplaceBetterName();
+
+            // Scalar functions
+            //RetrieveScalarResult();
+            //FilterScalarResult();
+            //SortWithScalar();
+            SortWithoutReturningScalar();
+        }
+
+        private static void SortWithoutReturningScalar()
+        {
+            var samurais = _context.Samurais
+                    .OrderBy(s => SamuraiContext.EarliestBattleFoughtBySamurai(s.Id))
+                    .ToList();
+        }
+
+        private static void SortWithScalar()
+        {
+            var samurais = _context.Samurais
+                    .OrderBy(s => SamuraiContext.EarliestBattleFoughtBySamurai(s.Id))
+                    .Select(s => new {
+                        s.Name,
+                        FirstBattle = SamuraiContext.EarliestBattleFoughtBySamurai(s.Id),
+                    })
+                    .ToList();
+        }
+
+        private static void FilterScalarResult()
+        {
+            var samurais = _context.Samurais
+                    .Where(s=>EF.Functions.Like(SamuraiContext.EarliestBattleFoughtBySamurai(s.Id), "%Battle%"))
+                    .Select(s => new {
+                        s.Name,
+                        FirstBattle = SamuraiContext.EarliestBattleFoughtBySamurai(s.Id),})
+                    .ToList();
+        }
+
+        private static void RetrieveScalarResult()
+        {
+            var samurais = _context.Samurais
+                    .Select(s => new {
+                        s.Name,
+                        FirstBattle = SamuraiContext.EarliestBattleFoughtBySamurai(s.Id),})
+                    .ToList();
         }
 
         private static void CreateAndFixNullBetterName()
@@ -68,7 +111,6 @@ namespace SamuraiApp.UI
                     samurai.BetterName = null;
             }
         }
-
         private static void ReplaceBetterName()
         {
             var samurai = _context.Samurais.FirstOrDefault(s=>s.Name == "Chrisjen");
@@ -79,7 +121,6 @@ namespace SamuraiApp.UI
             _context.Samurais.Update(samurai);
             _context.SaveChanges();
         }
-
         private static void FixNullBetterName()
         {
             var samurai = _context.Samurais.FirstOrDefault(s => s.Name == "Matt");
