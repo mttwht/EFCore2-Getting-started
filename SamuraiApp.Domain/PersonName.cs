@@ -2,7 +2,7 @@
 {
     public class PersonName
     {
-        public PersonName(string givenName, string surname)
+        private PersonName(string givenName, string surname)
         {
             Surname = surname;
             GivenName = givenName;
@@ -12,5 +12,25 @@
         public string GivenName { get; set; }
         public string FullName => $"{GivenName} {Surname}";
         public string FullNameReverse => $"{Surname}, {GivenName}";
+
+        // For EFCore 2.0/2.1 needing owned types to always be instantiated
+        #region Workarounds
+
+        public static PersonName Create(string givenName, string surname)
+        {
+            return new PersonName(givenName, surname);
+        }
+
+        public static PersonName Empty()
+        {
+            return new PersonName(string.Empty, string.Empty);
+        }
+
+        public bool IsEmpty()
+        {
+            return string.IsNullOrEmpty(GivenName) & string.IsNullOrEmpty(Surname);
+        }
+
+        #endregion
     }
 }

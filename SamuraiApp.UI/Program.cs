@@ -50,7 +50,17 @@ namespace SamuraiApp.UI
             // Owned Types
             //GetAllSamurais();
             //CreateSamuraiWithBetterName();
-            RetrieveAndUpdateBetterName();
+            //RetrieveAndUpdateBetterName();
+            FixNullBetterName();
+        }
+
+        private static void FixNullBetterName()
+        {
+            var samurai = _context.Samurais.FirstOrDefault(s => s.Name == "Matt");
+            if(samurai is null)
+                return;
+            if(samurai.BetterName.IsEmpty())
+                samurai.BetterName = null;
         }
 
         private static void RetrieveAndUpdateBetterName()
@@ -64,7 +74,7 @@ namespace SamuraiApp.UI
         {
             var samurai = new Samurai {
                 Name = "Jack le Black",
-                BetterName = new PersonName("Jack", "Black"),
+                BetterName = PersonName.Create("Jack", "Black"),
             };
             _context.Samurais.Add(samurai);
             _context.SaveChanges();

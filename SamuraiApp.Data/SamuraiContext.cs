@@ -66,6 +66,14 @@ namespace SamuraiApp.Data
                 entry.Property("UpdatedAt").CurrentValue = timestamp;
                 if(entry.State == EntityState.Added)
                     entry.Property("CreatedAt").CurrentValue = timestamp;
+
+                // For EFCore 2.0/2.1 needing owned types to always be instantiated
+                #region Workaround
+                if( entry.Entity is Samurai ) {
+                    if(entry.Reference("BetterName").CurrentValue == null)
+                        entry.Reference("BetterName").CurrentValue = PersonName.Empty();
+                }
+                #endregion
             }
             return base.SaveChanges();
         }
