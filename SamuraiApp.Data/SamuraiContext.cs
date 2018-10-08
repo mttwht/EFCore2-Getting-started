@@ -60,20 +60,24 @@ namespace SamuraiApp.Data
         public override int SaveChanges()
         {
             ChangeTracker.DetectChanges();
+
             var timestamp = DateTime.Now;
+
+            // For EFCore 2.0/2.1 needing owned types to always be instantiated
+            #region Workaround
+            var entries = ChangeTracker.Entries().Where(e => e.Entity is Samurai).ToList();
+            foreach(var entry in entries) {
+                if(entry.Reference("BetterName").CurrentValue == null)
+                    entry.Reference("BetterName").CurrentValue = PersonName.Empty();
+                entry.Reference("BetterName").TargetEntry.State = entry.State;
+            }
+            #endregion
+
             foreach(var entry in ChangeTracker.Entries()
                     .Where(e=>(e.State==EntityState.Added || e.State==EntityState.Modified) && !e.Metadata.IsOwned()) ) {
                 entry.Property("UpdatedAt").CurrentValue = timestamp;
                 if(entry.State == EntityState.Added)
                     entry.Property("CreatedAt").CurrentValue = timestamp;
-
-                // For EFCore 2.0/2.1 needing owned types to always be instantiated
-                #region Workaround
-                if( entry.Entity is Samurai ) {
-                    if(entry.Reference("BetterName").CurrentValue == null)
-                        entry.Reference("BetterName").CurrentValue = PersonName.Empty();
-                }
-                #endregion
             }
             return base.SaveChanges();
         }

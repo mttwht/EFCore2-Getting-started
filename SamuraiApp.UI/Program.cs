@@ -49,9 +49,35 @@ namespace SamuraiApp.UI
 
             // Owned Types
             //GetAllSamurais();
-            //CreateSamuraiWithBetterName();
+            CreateSamuraiWithBetterName();
             //RetrieveAndUpdateBetterName();
-            FixNullBetterName();
+            //FixNullBetterName();
+            CreateAndFixNullBetterName();
+            ReplaceBetterName();
+        }
+
+        private static void CreateAndFixNullBetterName()
+        {
+            _context.Samurais.Add(new Samurai { Name = "Chrisjen" });
+            _context.SaveChanges();
+            using(var context = new SamuraiContext()) {
+                var samurai = context.Samurais.FirstOrDefault(s => s.Name == "Chrisjen");
+                if(samurai == null)
+                    return;
+                if(samurai.BetterName.IsEmpty())
+                    samurai.BetterName = null;
+            }
+        }
+
+        private static void ReplaceBetterName()
+        {
+            var samurai = _context.Samurais.FirstOrDefault(s=>s.Name == "Chrisjen");
+            // Need to flag name object as detatched
+            _context.Entry(samurai).Reference(s => s.BetterName).TargetEntry.State = EntityState.Detached;
+            samurai.BetterName = PersonName.Create("Shohreh", "Aghdashloo");
+            // retrack Samurai object
+            _context.Samurais.Update(samurai);
+            _context.SaveChanges();
         }
 
         private static void FixNullBetterName()
@@ -62,14 +88,12 @@ namespace SamuraiApp.UI
             if(samurai.BetterName.IsEmpty())
                 samurai.BetterName = null;
         }
-
-        private static void RetrieveAndUpdateBetterName()
-        {
-            var samurai = _context.Samurais.FirstOrDefault(s => s.BetterName.Surname == "Black");
-            samurai.BetterName.GivenName = "Jill";
-            _context.SaveChanges();
-        }
-
+        //private static void RetrieveAndUpdateBetterName()
+        //{
+        //    var samurai = _context.Samurais.FirstOrDefault(s => s.BetterName.Surname == "Black");
+        //    samurai.BetterName.GivenName = "Jill";
+        //    _context.SaveChanges();
+        //}
         private static void CreateSamuraiWithBetterName()
         {
             var samurai = new Samurai {
@@ -79,7 +103,6 @@ namespace SamuraiApp.UI
             _context.Samurais.Add(samurai);
             _context.SaveChanges();
         }
-
         private static void GetAllSamurais()
         {
             var allSamurais = _context.Samurais.ToList();
