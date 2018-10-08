@@ -156,6 +156,10 @@
     <Compile Include="Migrations\20181008103832_RemoveTimestamps.designer.cs">
       <DependentUpon>20181008103832_RemoveTimestamps.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20181008213815_AddScalarFunction.cs" />
+    <Compile Include="Migrations\20181008213815_AddScalarFunction.designer.cs">
+      <DependentUpon>20181008213815_AddScalarFunction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\SamuraiContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SamuraiContext.cs" />

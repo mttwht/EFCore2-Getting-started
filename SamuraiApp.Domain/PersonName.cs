@@ -30,6 +30,8 @@ namespace SamuraiApp.Domain
             return new PersonName(string.Empty, string.Empty);
         }
 
+        #endregion
+
         public override bool Equals(object obj)
         {
             var name = obj as PersonName;
@@ -61,6 +63,5 @@ namespace SamuraiApp.Domain
             return !(name1 == name2);
         }
 
-        #endregion
     }
 }

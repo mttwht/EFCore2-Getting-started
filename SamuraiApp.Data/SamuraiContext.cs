@@ -28,6 +28,15 @@ namespace SamuraiApp.Data
                 .UseSqlServer("Server=(localdb)\\mssqllocaldb; Database=SamuraiAppData; Trusted_Connection=True;");
         }
 
+        // EfCode 2.0
+        //[DbFunction(Schema ="dbo")]
+        // EfCore 2.1
+        [DbFunction]
+        public static string EarliestBattleFoughtBySamurai(int samuraiId)
+        {
+            throw new Exception();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SamuraiBattle>().HasKey(s => new { s.SamuraiId, s.BattleId });
