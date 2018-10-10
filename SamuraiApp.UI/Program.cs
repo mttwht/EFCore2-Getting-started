@@ -59,7 +59,17 @@ namespace SamuraiApp.UI
             //RetrieveScalarResult();
             //FilterScalarResult();
             //SortWithScalar();
-            SortWithoutReturningScalar();
+            //SortWithoutReturningScalar();
+            //GetDaysInBattle();
+        }
+
+        private static void GetDaysInBattle()
+        {
+            var battles = _context.Battles.Select(
+                    b => new {
+                        b.Name,
+                        Days = SamuraiContext.DaysInBattle(b.StartDate, b.EndDate)
+                    }).ToList();
         }
 
         private static void SortWithoutReturningScalar()

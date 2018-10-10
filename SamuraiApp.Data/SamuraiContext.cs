@@ -14,6 +14,13 @@ namespace SamuraiApp.Data
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<Battle> Battles { get; set; }
 
+        public SamuraiContext(DbContextOptions<SamuraiContext> options)
+            : base(options)
+        { }
+
+        public SamuraiContext()
+        { }
+
         public static readonly LoggerFactory MyConsoleLoggerFactory = new LoggerFactory(new[] {
             new ConsoleLoggerProvider((category, level)
                 => category==DbLoggerCategory.Database.Command.Name
@@ -22,10 +29,12 @@ namespace SamuraiApp.Data
 
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
         {
-            optionsBuilder
-                .UseLoggerFactory(MyConsoleLoggerFactory) // log sql queries
-                .EnableSensitiveDataLogging(true) // show parameters in log
-                .UseSqlServer("Server=(localdb)\\mssqllocaldb; Database=SamuraiAppData; Trusted_Connection=True;");
+            if( ! optionsBuilder.IsConfigured ) {
+                optionsBuilder
+                    .UseLoggerFactory(MyConsoleLoggerFactory) // log sql queries
+                    .EnableSensitiveDataLogging(true) // show parameters in log
+                    .UseSqlServer("Server=(localdb)\\mssqllocaldb; Database=SamuraiAppData; Trusted_Connection=True;");
+            }
         }
 
         // EfCode 2.0
@@ -35,6 +44,12 @@ namespace SamuraiApp.Data
         public static string EarliestBattleFoughtBySamurai(int samuraiId)
         {
             throw new Exception();
+        }
+
+        [DbFunction]
+        public static int DaysInBattle(DateTime start, DateTime end)
+        {
+            return (int)end.Subtract(start).TotalDays + 1;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
