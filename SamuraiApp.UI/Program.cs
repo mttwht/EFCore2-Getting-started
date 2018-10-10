@@ -61,6 +61,21 @@ namespace SamuraiApp.UI
             //SortWithScalar();
             //SortWithoutReturningScalar();
             //GetDaysInBattle();
+            GetDaysInBattleWithoutDbFunction();
+        }
+
+        private static void GetDaysInBattleWithoutDbFunction()
+        {
+            var battles = _context.Battles.Select(
+                    b => new {
+                        b.Name,
+                        Days = DateDiffDaysPlusOne(b.StartDate, b.EndDate)
+                    }).ToList();
+        }
+
+        private static object DateDiffDaysPlusOne(DateTime start, DateTime end)
+        {
+            return (int)end.Subtract(start).TotalDays + 1;
         }
 
         private static void GetDaysInBattle()
