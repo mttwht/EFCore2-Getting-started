@@ -76,10 +76,16 @@ namespace SamuraiApp.Data
             modelBuilder.Entity<Samurai>().OwnsOne(s => s.BetterName).Property(n => n.Surname).HasColumnName("Surname");
 
             foreach(var entityType in modelBuilder.Model.GetEntityTypes().Where(e=>!e.IsOwned())) {
+                if(entityType.ClrType.BaseType == typeof(DbView))
+                    continue;
+
                 modelBuilder.Entity(entityType.Name).Property<DateTime>("CreatedAt");
                 modelBuilder.Entity(entityType.Name).Property<DateTime>("UpdatedAt");
             }
 
+            var queries = modelBuilder.Model.GetEntityTypes().Where(e => e.IsQueryType);
+
+            modelBuilder.Entity<SamuraiStat>().ToTable("SamuraiBattleStats");
             modelBuilder.Entity<SamuraiStat>().HasKey(s => s.SamuraiId);
             // This is how to create a composite key:
             //modelBuilder.Entity<SamuraiStat>().HasKey(s => new { s.Name, s.NumberOfBattles });

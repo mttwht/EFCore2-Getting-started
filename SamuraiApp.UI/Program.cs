@@ -62,7 +62,35 @@ namespace SamuraiApp.UI
             //SortWithoutReturningScalar();
             //GetDaysInBattle();
             //GetDaysInBattleWithoutDbFunction();
-            GetYearUsingDbBuiltInFunction();
+            //GetYearUsingDbBuiltInFunction();
+
+            // Views
+            GetStats();
+            Filter();
+            Project();
+        }
+
+        private static void Project()
+        {
+            var stats = _context.SamuraiStats
+                .AsNoTracking()
+                .Select(s => new { s.Name, s.NumberOfBattles })
+                .ToList();
+        }
+
+        private static void Filter()
+        {
+            var stats = _context.SamuraiStats
+                .Where(s => s.SamuraiId == 2)
+                .AsNoTracking()
+                .ToList();
+        }
+
+        private static void GetStats()
+        {
+            var stats = _context.SamuraiStats
+                .AsNoTracking()
+                .ToList();
         }
 
         private static void GetYearUsingDbBuiltInFunction()
@@ -73,7 +101,6 @@ namespace SamuraiApp.UI
                     b.StartDate.Year
                 }).ToList();
         }
-
         private static void GetDaysInBattleWithoutDbFunction()
         {
             var battles = _context.Battles.Select(
@@ -82,12 +109,10 @@ namespace SamuraiApp.UI
                         Days = DateDiffDaysPlusOne(b.StartDate, b.EndDate)
                     }).ToList();
         }
-
         private static object DateDiffDaysPlusOne(DateTime start, DateTime end)
         {
             return (int)end.Subtract(start).TotalDays + 1;
         }
-
         private static void GetDaysInBattle()
         {
             var battles = _context.Battles.Select(
@@ -96,14 +121,12 @@ namespace SamuraiApp.UI
                         Days = SamuraiContext.DaysInBattle(b.StartDate, b.EndDate)
                     }).ToList();
         }
-
         private static void SortWithoutReturningScalar()
         {
             var samurais = _context.Samurais
                     .OrderBy(s => SamuraiContext.EarliestBattleFoughtBySamurai(s.Id))
                     .ToList();
         }
-
         private static void SortWithScalar()
         {
             var samurais = _context.Samurais
@@ -114,7 +137,6 @@ namespace SamuraiApp.UI
                     })
                     .ToList();
         }
-
         private static void FilterScalarResult()
         {
             var samurais = _context.Samurais
@@ -124,7 +146,6 @@ namespace SamuraiApp.UI
                         FirstBattle = SamuraiContext.EarliestBattleFoughtBySamurai(s.Id),})
                     .ToList();
         }
-
         private static void RetrieveScalarResult()
         {
             var samurais = _context.Samurais
