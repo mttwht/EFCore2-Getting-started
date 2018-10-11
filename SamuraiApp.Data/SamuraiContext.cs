@@ -13,6 +13,7 @@ namespace SamuraiApp.Data
         public DbSet<Samurai> Samurais { get; set; }
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<Battle> Battles { get; set; }
+        public DbSet<SamuraiStat> SamuraiStats { get; set; }
 
         public SamuraiContext(DbContextOptions<SamuraiContext> options)
             : base(options)
@@ -79,6 +80,9 @@ namespace SamuraiApp.Data
                 modelBuilder.Entity(entityType.Name).Property<DateTime>("UpdatedAt");
             }
 
+            modelBuilder.Entity<SamuraiStat>().HasKey(s => s.SamuraiId);
+            // This is how to create a composite key:
+            //modelBuilder.Entity<SamuraiStat>().HasKey(s => new { s.Name, s.NumberOfBattles });
         }
 
         public override int SaveChanges()
