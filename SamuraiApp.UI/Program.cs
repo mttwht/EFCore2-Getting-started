@@ -73,23 +73,18 @@ namespace SamuraiApp.UI
         private static void Project()
         {
             var stats = _context.SamuraiStats
-                .AsNoTracking()
                 .Select(s => new { s.Name, s.NumberOfBattles })
                 .ToList();
         }
-
         private static void Filter()
         {
             var stats = _context.SamuraiStats
                 .Where(s => s.SamuraiId == 2)
-                .AsNoTracking()
                 .ToList();
         }
-
         private static void GetStats()
         {
             var stats = _context.SamuraiStats
-                .AsNoTracking()
                 .ToList();
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SamuraiApp.Domain
 {
-    public class SamuraiStat : DbView
+    public class SamuraiStat
     {
         public int SamuraiId { get; private set; }
         public string Name { get; private set; }

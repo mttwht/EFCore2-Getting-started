@@ -13,7 +13,7 @@ namespace SamuraiApp.Data
         public DbSet<Samurai> Samurais { get; set; }
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<Battle> Battles { get; set; }
-        public DbSet<SamuraiStat> SamuraiStats { get; set; }
+        public DbQuery<SamuraiStat> SamuraiStats { get; set; }
 
         public SamuraiContext(DbContextOptions<SamuraiContext> options)
             : base(options)
@@ -75,18 +75,13 @@ namespace SamuraiApp.Data
             modelBuilder.Entity<Samurai>().OwnsOne(s => s.BetterName).Property(n => n.GivenName).HasColumnName("GivenName");
             modelBuilder.Entity<Samurai>().OwnsOne(s => s.BetterName).Property(n => n.Surname).HasColumnName("Surname");
 
-            foreach(var entityType in modelBuilder.Model.GetEntityTypes().Where(e=>!e.IsOwned())) {
-                if(entityType.ClrType.BaseType == typeof(DbView))
-                    continue;
-
+            foreach(var entityType in modelBuilder.Model.GetEntityTypes().Where(e=>!e.IsOwned() && !e.IsQueryType)) {
                 modelBuilder.Entity(entityType.Name).Property<DateTime>("CreatedAt");
                 modelBuilder.Entity(entityType.Name).Property<DateTime>("UpdatedAt");
             }
 
-            var queries = modelBuilder.Model.GetEntityTypes().Where(e => e.IsQueryType);
-
-            modelBuilder.Entity<SamuraiStat>().ToTable("SamuraiBattleStats");
-            modelBuilder.Entity<SamuraiStat>().HasKey(s => s.SamuraiId);
+            modelBuilder.Query<SamuraiStat>().ToView("SamuraiBattleStats");
+            //modelBuilder.Entity<SamuraiStat>().HasKey(s => s.SamuraiId);
             // This is how to create a composite key:
             //modelBuilder.Entity<SamuraiStat>().HasKey(s => new { s.Name, s.NumberOfBattles });
         }
